@@ -1,4 +1,5 @@
-﻿using Maze.Library;
+using Maze.Library;
+using System;
 
 namespace Maze.Solver
 {
@@ -8,7 +9,8 @@ namespace Maze.Solver
     public class RobotController
     {
         private readonly IRobot robot;
-
+        public int _moves;
+     
         /// <summary>
         /// Initializes a new instance of the <see cref="RobotController"/> class
         /// </summary>
@@ -29,18 +31,28 @@ namespace Maze.Solver
         /// the exit is not reachable, it has to call <see cref="IRobot.HaltAndCatchFire"/>
         /// and exit.
         /// </remarks>
-        public void MoveRobotToExit()
+        public int MoveRobotToExit()
         {
             // Here you have to add your code
 
             // Trivial sample algorithm that can just move right
             var reachedEnd = false;
             robot.ReachedExit += (_, __) => reachedEnd = true;
+            Random rnd = new Random();
 
             while (!reachedEnd)
             {
-                robot.Move(Direction.Right);
+                robot.TryMove((Direction)rnd.Next(0, 4));
+                _moves++;
+                if (_moves == 10000000)
+                {
+                    robot.HaltAndCatchFire();
+                    reachedEnd = true;
+                }
+
             }
+            return _moves;
         }
     }
 }
+
