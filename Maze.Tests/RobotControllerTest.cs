@@ -39,6 +39,21 @@ namespace Maze.Tests
             Assert.True(robot.hcfCalled);
         }
 
+        public void usesBacklogging()
+        {
+            /*
+             *Checks if the robot needs more than 1000 moves to stop the search
+             */
+
+            var maze = new BitArray(Mazes.MazeFromString(Mazes.NoSolution));
+            var robot = new Robot(maze, (int)Math.Sqrt(maze.Count), Mazes.NoSolutionStart, Mazes.NoSolutionEnd);
+            var controller = new RobotController(robot);
+            int moves = controller.MoveRobotToExit();
+            Assert.True(1000 > moves);
+
+
+        }
+        
         private void MoveAndCheckPosition(string mazeString, (int y, int x) start, (int y, int x) end)
         {
             var robot = MoveToExit(mazeString, start, end);
